@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PowershellConnectorDefinition Id="XyzConnector" Description="Xyz connector" Version="1.0">
+    <PluginAssemblies/>
+    <ConnectionParameters>
+        <ConnectionParameter Name="Module"   Description="Module"/>
+        <ConnectionParameter Name="JsonFile" Description="Data file"/>
+    </ConnectionParameters>
+    <Initialization>
+        <PredefinedCommands>
+            <Command Name="Connect-Xyz"/>
+            <Command Name="Disconnect-Xyz"/>
+            <Command Name="Get-XyzAccounts"/>
+            <Command Name="Get-XyzAccount"/>
+            <Command Name="New-XyzAccount"/>
+            <Command Name="Set-XyzAccount"/>
+            <Command Name="Set-XyzAccount2"/>
+            <Command Name="Set-XyzAccountDisabled"/>
+            <Command Name="Remove-XyzAccount"/>
+         </PredefinedCommands>
+        <CustomCommands>
+            <CustomCommand Name="Import-ConnectorModule">
+                <![CDATA[
+                    param($Module)
+                    Import-Module -Force $Module
+                ]]>
+            </CustomCommand>
+            <CustomCommand Name="Connect-TargetSystem">
+                <![CDATA[
+                    param($JsonFile)
+                    Connect-Xyz $JsonFile
+                ]]>
+            </CustomCommand>
+            <CustomCommand Name="Disconnect-TargetSystem">
+                <![CDATA[
+                    Disconnect-Xyz
+                ]]>
+            </CustomCommand>
+        </CustomCommands>
+        <EnvironmentInitialization>
+            <Connect>
+                <CommandSequence>
+                    <Item Command="Import-ConnectorModule" Order="1">
+                        <SetParameter Param="Module" Source="ConnectionParameter" Value="Module"/>
+                    </Item>
+                    <Item Command="Connect-TargetSystem" Order="2">
+                        <SetParameter Param="JsonFile" Source="ConnectionParameter" Value="JsonFile"/>
+                    </Item>
+                </CommandSequence>
+            </Connect>
+            <Disconnect>
+                <CommandSequence>
+                    <Item Command="Disconnect-TargetSystem" Order="1"/>
+                </CommandSequence>
+            </Disconnect>
+        </EnvironmentInitialization>
+    </Initialization>
+    <Schema>
+        <Class Name="User">
+            <Properties>
+                <Property Name="id" DataType="String" IsUniqueKey="true" IsMandatory="true" AccessConstraint="ReadAndInsertOnly">
+                    <ReturnBindings>
+                        <Bind CommandResultOf="Get-XyzAccounts" Path="id"/>
+                        <Bind CommandResultOf="Get-XyzAccount"  Path="id"/>
+                        <Bind CommandResultOf="New-XyzAccount"  Path="id"/>
+                    </ReturnBindings>
+                    <CommandMappings>
+                        <Map ToCommand="Get-XyzAccount"         Parameter="id"/>
+                        <Map ToCommand="New-XyzAccount"         Parameter="id"/>
+                        <Map ToCommand="Set-XyzAccount"         Parameter="id"/>
+                        <Map ToCommand="Set-XyzAccount2"        Parameter="id"/>
+                        <Map ToCommand="Set-XyzAccountDisabled" Parameter="id"/>
+                        <Map ToCommand="Remove-XyzAccount"      Parameter="id"/>
+                    </CommandMappings>
+                </Property>
+                <Property Name="fname" DataType="String">
+                    <ReturnBindings>
+                        <Bind CommandResultOf="Get-XyzAccounts" Path="fname"/>
+                        <Bind CommandResultOf="Get-XyzAccount"  Path="fname"/>
+                    </ReturnBindings>
+                    <CommandMappings>
+                        <Map ToCommand="New-XyzAccount"  Parameter="fname"/>
+                        <Map ToCommand="Set-XyzAccount"  Parameter="fname"/>
+                        <Map ToCommand="Set-XyzAccount2" Parameter="fname"/>
+                    </CommandMappings>
+                    <ModifiedBy>
+                        <ModBy Command="Set-XyzAccount"/>
+                    </ModifiedBy>
+                </Property>
+                <Property Name="lname" DataType="String">
+                    <ReturnBindings>
+                        <Bind CommandResultOf="Get-XyzAccounts" Path="lname"/>
+                        <Bind CommandResultOf="Get-XyzAccount"  Path="lname"/>
+                    </ReturnBindings>
+                    <CommandMappings>
+                        <Map ToCommand="New-XyzAccount"  Parameter="lname"/>
+                        <Map ToCommand="Set-XyzAccount"  Parameter="lname"/>
+                        <Map ToCommand="Set-XyzAccount2" Parameter="lname"/>
+                    </CommandMappings>
+                    <ModifiedBy>
+                        <ModBy Command="Set-XyzAccount"/>
+                    </ModifiedBy>
+                </Property>
+                <Property Name="title" DataType="String">
+                    <ReturnBindings>
+                        <Bind CommandResultOf="Get-XyzAccounts" Path="title"/>
+                        <Bind CommandResultOf="Get-XyzAccount"  Path="title"/>
+                    </ReturnBindings>
+                    <CommandMappings>
+                        <Map ToCommand="New-XyzAccount"  Parameter="title"/>
+                        <Map ToCommand="Set-XyzAccount"  Parameter="title"/>
+                        <Map ToCommand="Set-XyzAccount2" Parameter="title"/>
+                    </CommandMappings>
+                    <ModifiedBy>
+                        <ModBy Command="Set-XyzAccount"/>
+                    </ModifiedBy>
+                </Property>
+                <Property Name="disabled" DataType="String">
+                    <ReturnBindings>
+                        <Bind CommandResultOf="Get-XyzAccounts" Path="disabled"/>
+                        <Bind CommandResultOf="Get-XyzAccount"  Path="disabled"/>
+                    </ReturnBindings>
+                    <CommandMappings>
+                        <Map ToCommand="New-XyzAccount"         Parameter="disabled"/>
+                        <Map ToCommand="Set-XyzAccountDisabled" Parameter="disabled"/>
+                    </CommandMappings>
+                    <ModifiedBy>
+                        <ModBy Command="Set-XyzAccountDisabled"/>
+                    </ModifiedBy>
+                </Property>
+            </Properties>
+            <ReadConfiguration>
+                <ListingCommand Command="Get-XyzAccounts"/>
+                <CommandSequence>
+                    <Item Command="Get-XyzAccount" Order="1"/>
+                </CommandSequence>
+            </ReadConfiguration>
+            <MethodConfiguration>
+                <Method Name="Insert">
+                    <CommandSequence>
+                         <Item Command="New-XyzAccount" Order="1"/>
+                    </CommandSequence>
+                </Method>
+                <Method Name="Update">
+                    <CommandSequence>
+                         <Item Command="Set-XyzAccount" Order="1" Condition="ModificationExists">
+                            <SetParameter Param="con" Source="GlobalVariable" Value="con"/>
+                        </Item>
+                         <Item Command="Set-XyzAccount2" Order="2">
+                            <SetParameter Param="con" Source="GlobalVariable" Value="con"/>
+                        </Item>
+                         <Item Command="Set-XyzAccountDisabled" Order="3" Condition="ModificationExists">
+                            <SetParameter Param="con" Source="GlobalVariable" Value="con"/>
+                        </Item>
+                    </CommandSequence>
+                </Method>
+                <Method Name="Delete">
+                    <CommandSequence>
+                         <Item Command="Remove-XyzAccount" Order="1"/>
+                    </CommandSequence>
+                </Method>
+            </MethodConfiguration>
+        </Class>
+    </Schema>
+</PowershellConnectorDefinition>

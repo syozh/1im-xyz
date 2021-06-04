@@ -1,0 +1,32 @@
+{
+    "accounts":  {
+                     "43e2aa57-40bb-4ce3-b3f5-4de55750bccf":  {
+                                                                  "fname":  "Alice",
+                                                                  "title":  "President",
+                                                                  "disabled":  "0",
+                                                                  "id":  "43e2aa57-40bb-4ce3-b3f5-4de55750bccf",
+                                                                  "lname":  "Anderson"
+                                                              },
+                     "c8932aad-4b86-469d-bd8f-2bf715c94448":  {
+                                                                  "fname":  "Bob",
+                                                                  "title":  "Vice-president",
+                                                                  "disabled":  "0",
+                                                                  "id":  "c8932aad-4b86-469d-bd8f-2bf715c94448",
+                                                                  "lname":  "Brown"
+                                                              },
+                     "e021d5e3-297a-4af4-b45b-02159cd07788":  {
+                                                                  "fname":  "Carol",
+                                                                  "title":  "CEO",
+                                                                  "disabled":  "0",
+                                                                  "id":  "e021d5e3-297a-4af4-b45b-02159cd07788",
+                                                                  "lname":  "Cooper"
+                                                              },
+                     "673056a4-1936-4309-8e50-b167d635a13a":  {
+                                                                  "fname":  "David",
+                                                                  "title":  "CTO",
+                                                                  "disabled":  "0",
+                                                                  "id":  "673056a4-1936-4309-8e50-b167d635a13a",
+                                                                  "lname":  "Davies"
+                                                              }
+                 }
+}
