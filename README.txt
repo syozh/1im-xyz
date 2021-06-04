@@ -35,7 +35,8 @@ Questions
      Set-XyzAccount id=1 fname='' lname='' title='CSO'
 
   2) If method Update (Create) consists of many commands (like Set-XyzAccount, Set-XyzAccount2, ...) and
-     commands have common parameters, then the following commands will receive empty parameters:
+     commands have common parameters, then all subsequent commands receive empty parameters after the first
      I.e.
-     Set-XyzAccount  id=1 fname='' lname='' title='Big boss'
-     Set-XyzAccount2 id=1 fname='' lname='' title=''
+     Set-XyzAccount  id=1 title='Big boss'
+     Set-XyzAccount2 id=1 title=''
+     ...
